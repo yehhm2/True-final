@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台北捷運路線規劃</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="light-mode">
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="brand-link" id="brand-home-link" aria-label="回到首頁">
+                    <i class="fa-solid fa-train-subway logo-icon"></i>
+                    <div class="logo-text">
+                        <h1>台北捷運路線規劃</h1>
+                        <p>車站查詢、搭車規劃與出口建議</p>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" id="nav-home"><i class="fa-solid fa-house"></i> 首頁</a>
+                <a href="#" class="nav-item" id="nav-station"><i class="fa-regular fa-square-caret-down"></i> 車站查詢</a>
+                <a href="#" class="nav-item" id="nav-transfer"><i class="fa-solid fa-train-subway"></i> 我要搭車</a>
+                <a href="#" class="nav-item" id="nav-exit"><i class="fa-solid fa-door-open"></i> 我要出站</a>
+                <a href="#" class="nav-item" id="nav-route-map"><i class="fa-solid fa-map"></i> 路線圖</a>
+                <a href="#" class="nav-item" id="nav-favorite"><i class="fa-regular fa-heart"></i> 我的最愛</a>
+            </nav>
+
+            <div class="sidebar-illustration">
+                <img src="picture/網頁小圖.jpg" alt="台北捷運小圖" class="nav-illustration-img">
+                <div class="illustration-placeholder"></div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="global-search-input" placeholder="輸入捷運站名，例如台北車站">
+                    <button class="btn-primary" id="search-btn">搜尋</button>
+                    <div class="search-suggestions" id="search-suggestions"></div>
+                </div>
+                <div class="actions">
+                    <button id="theme-toggle" class="theme-btn" type="button">
+                        <i class="fa-solid fa-moon"></i> 深色模式
+                    </button>
+                </div>
+            </header>
+
+            <div id="view-station" class="view-section" style="display:none;">
+                <div class="view-header">
+                    <h2><i class="fa-regular fa-square-caret-down"></i> 車站查詢</h2>
+                    <p class="desc">選擇路線與車站後，查看車站代碼、轉乘資訊、設施與出口資料。</p>
+                </div>
+
+                <div class="card search-step-card">
+                    <div class="step-group">
+                        <h3>選擇捷運路線</h3>
+                        <div class="line-buttons" id="line-buttons">
+                            <button class="line-btn bl-line" data-line="BL"><span class="line-badge bl-badge">BL</span> 板南線</button>
+                            <button class="line-btn r-line" data-line="R"><span class="line-badge r-badge">R</span> 淡水信義線</button>
+                            <button class="line-btn g-line" data-line="G"><span class="line-badge g-badge">G</span> 松山新店線</button>
+                            <button class="line-btn o-line" data-line="O"><span class="line-badge o-badge">O</span> 中和新蘆線</button>
+                            <button class="line-btn br-line" data-line="BR"><span class="line-badge br-badge">BR</span> 文湖線</button>
+                            <button class="line-btn y-line" data-line="Y"><span class="line-badge y-badge">Y</span> 環狀線</button>
+                        </div>
+                    </div>
+
+                    <div class="step-group">
+                        <h3>選擇車站</h3>
+                        <div class="select-wrapper">
+                            <select id="station-select" class="custom-select" disabled>
+                                <option value="">請先選擇捷運路線</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-dashboard" class="view-section" style="display:none;">
+                <div class="dashboard-grid-new">
+                    <div class="dashboard-card station-header-card">
+                        <div class="station-title-row">
+                            <div class="main-badge-large" id="dash-main-badge">BL<br>12</div>
+                            <div class="station-names">
+                                <h2 id="dash-station-name">台北車站</h2>
+                                <span class="en-name" id="dash-station-en">Taipei Main Station</span>
+                                <span class="line-tag-text" id="dash-line-tags">板南線</span>
+                            </div>
+                        </div>
+                        <div class="station-desc-container">
+                            <p class="station-desc" id="dash-station-desc"></p>
+                        </div>
+                        <div class="transfer-badges" id="dash-transfer-badges"></div>
+                        <button class="btn-outline favorite-btn" id="dash-favorite-btn" type="button"><i class="fa-regular fa-heart"></i> 加入我的最愛</button>
+                    </div>
+
+                    <div class="dashboard-card transfer-info-card">
+                        <div class="card-header">
+                            <h3>轉乘資訊</h3>
+                        </div>
+                        <div class="card-body" id="dash-transfer-info"></div>
+                    </div>
+
+                    <div class="dashboard-card facilities-card">
+                        <div class="card-header">
+                            <h3>車站設施</h3>
+                            <span class="view-all disabled-link" id="view-all-facilities">查看所有設施 <small>Coming soon...</small></span>
+                        </div>
+                        <div class="facilities-grid-new" id="dash-facilities"></div>
+                    </div>
+
+                    <div class="dashboard-card map-card">
+                        <div class="card-header">
+                            <h3>車站平面圖</h3>
+                        </div>
+                        <div class="card-body map-container-svg" id="dash-map-container"></div>
+                    </div>
+
+                    <div class="dashboard-card exits-card">
+                        <div class="card-header">
+                            <h3>車站出口資訊</h3>
+                            <span class="view-all disabled-link">查看所有出口 <small>Coming soon...</small></span>
+                        </div>
+                        <div class="exits-list-new" id="dash-exits"></div>
+                        <div class="exits-legend">
+                            <span><i class="fa-solid fa-elevator"></i> 電梯</span>
+                            <span><i class="fa-solid fa-stairs"></i> 樓梯</span>
+                            <span><i class="fa-solid fa-restroom"></i> 洗手間</span>
+                            <span><i class="fa-solid fa-circle-question"></i> 詢問處</span>
+                            <span><i class="fa-brands fa-accessible-icon"></i> 無障礙</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-transfer" class="view-section" style="display:none;">
+                <div class="view-header">
+                    <h2><i class="fa-solid fa-train-subway"></i> 我要搭車</h2>
+                    <p class="desc">選擇起點與目的地，系統會提供最快轉乘與無障礙優先路線。</p>
+                </div>
+
+                <div class="card transfer-step-card">
+                    <div class="step-group">
+                        <h3>起點 <span class="step-hint">先選路線，再選車站</span></h3>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>路線</label>
+                                <div class="select-wrapper">
+                                    <select id="transfer-origin-line" class="custom-select line-select">
+                                        <option value="">請選擇路線</option>
+                                        <option value="BL" class="route-option-strong route-option-bl">BL 板南線</option>
+                                        <option value="R" class="route-option-strong route-option-r">R 淡水信義線</option>
+                                        <option value="G" class="route-option-strong route-option-g">G 松山新店線</option>
+                                        <option value="O" class="route-option-strong route-option-o">O 中和新蘆線</option>
+                                        <option value="BR" class="route-option-muted" disabled>BR 文湖線</option>
+                                        <option value="Y" class="route-option-muted" disabled>Y 環狀線</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>車站</label>
+                                <div class="select-wrapper">
+                                    <select id="transfer-origin-station" class="custom-select" disabled>
+                                        <option value="">請先選擇路線</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="transfer-arrow-divider">
+                        <div class="circle-icon"><i class="fa-solid fa-arrow-down"></i></div>
+                    </div>
+
+                    <div class="step-group">
+                        <h3>目的地 <span class="step-hint">先選路線，再選車站</span></h3>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>路線</label>
+                                <div class="select-wrapper">
+                                    <select id="transfer-target-line" class="custom-select line-select">
+                                        <option value="">請選擇路線</option>
+                                        <option value="BL" class="route-option-strong route-option-bl">BL 板南線</option>
+                                        <option value="R" class="route-option-strong route-option-r">R 淡水信義線</option>
+                                        <option value="G" class="route-option-strong route-option-g">G 松山新店線</option>
+                                        <option value="O" class="route-option-strong route-option-o">O 中和新蘆線</option>
+                                        <option value="BR" class="route-option-muted" disabled>BR 文湖線</option>
+                                        <option value="Y" class="route-option-muted" disabled>Y 環狀線</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>目的站</label>
+                                <div class="select-wrapper">
+                                    <select id="transfer-target-station" class="custom-select" disabled>
+                                        <option value="">請先選擇目的路線</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-row right-align">
+                        <button class="btn-outline" id="transfer-clear-btn" type="button">清除</button>
+                        <button class="btn-primary" id="calc-transfer-btn" type="button">規劃搭車路線</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-transfer-result" class="view-section" style="display:none;">
+                <div class="view-header flex-between">
+                    <h2><i class="fa-solid fa-train-subway"></i> 搭車查詢結果</h2>
+                    <button class="btn-outline" id="transfer-reselect-btn" type="button">重新查詢</button>
+                </div>
+                <p class="desc" id="transfer-result-subtitle"></p>
+                <div class="transfer-directions-container" id="transfer-result-cards"></div>
+            </div>
+
+            <div id="view-exit" class="view-section" style="display:none;">
+                <div class="view-header">
+                    <h2><i class="fa-solid fa-door-open"></i> 我要出站</h2>
+                    <p class="desc">選擇路線、車站與出口，查看建議車廂與出口資訊。</p>
+                </div>
+
+                <div class="card exit-step-card">
+                    <div class="step-group">
+                        <h3>選擇路線</h3>
+                        <div class="select-wrapper">
+                            <select id="exit-line-select" class="custom-select full-width line-select">
+                                <option value="">請選擇路線</option>
+                                <option value="BL" class="route-option-strong route-option-bl">BL 板南線</option>
+                                <option value="R" class="route-option-strong route-option-r">R 淡水信義線</option>
+                                <option value="G" class="route-option-strong route-option-g">G 松山新店線</option>
+                                <option value="O" class="route-option-strong route-option-o">O 中和新蘆線</option>
+                                <option value="BR" class="route-option-muted" disabled>BR 文湖線</option>
+                                <option value="Y" class="route-option-muted" disabled>Y 環狀線</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="step-group">
+                        <h3>選擇車站</h3>
+                        <div class="select-wrapper">
+                            <select id="exit-station-select" class="custom-select full-width" disabled>
+                                <option value="">請先選擇路線</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="step-group">
+                        <h3>選擇出口</h3>
+                        <div class="select-wrapper">
+                            <select id="exit-door-select" class="custom-select full-width" disabled>
+                                <option value="">請先選擇車站</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="step-group">
+                        <h3>選擇方向</h3>
+                        <div class="direction-radio-group" id="exit-direction-group">
+                            <div class="radio-card empty-state">請先選擇車站</div>
+                        </div>
+                    </div>
+                    <div class="action-row center-align">
+                        <button class="btn-primary large-btn" id="search-exit-btn" type="button">查詢出口資訊</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-exit-result" class="view-section" style="display:none;">
+                <div class="view-header flex-between">
+                    <h2><i class="fa-solid fa-door-open"></i> 我要出站</h2>
+                    <button class="btn-outline" id="exit-reselect-btn" type="button">重新查詢</button>
+                </div>
+                <p class="desc">依照所選出口，提供出口資訊與建議車廂。</p>
+                <div class="card exit-conditions-card">
+                    <h3>查詢條件</h3>
+                    <div class="conditions-grid" id="exit-result-conditions"></div>
+                </div>
+
+                <div class="card exit-info-card">
+                    <div class="exit-info-flex">
+                        <div class="exit-badge-large" id="exit-res-badge">1</div>
+                        <div class="exit-names">
+                            <h4 id="exit-res-name">出口 <span class="landmark">(出口)</span></h4>
+                            <span class="en-name" id="exit-res-en"></span>
+                        </div>
+                        <div class="exit-types">
+                            <div class="type-icons" id="exit-res-types"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card recommended-car-card">
+                    <div class="rc-left">
+                        <i class="fa-solid fa-train"></i> 建議車廂位置
+                    </div>
+                    <div class="rc-right" id="exit-res-cars"></div>
+                </div>
+                <p class="hint-text">亮起的車廂為建議搭乘位置，可協助更快抵達出口或轉乘動線。</p>
+            </div>
+
+            <div id="view-route-map" class="view-section" style="display:none;">
+                <div class="card" style="text-align:center;">
+                    <h2>台北捷運路線圖</h2>
+                    <img src="picture/路線圖.jpg" alt="台北捷運路線圖" style="max-width:100%; height:auto; border-radius:8px; margin-top:16px;">
+                </div>
+            </div>
+
+            <div id="view-favorite" class="view-section" style="display:none;">
+                <div class="view-header flex-between">
+                    <div>
+                        <h2><i class="fa-regular fa-heart"></i> 我的最愛</h2>
+                        <p class="desc">收藏常用車站，方便展示與快速查詢。</p>
+                    </div>
+                </div>
+
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" type="button">收藏車站</button>
+                        <button class="tab-btn" type="button">查詢紀錄</button>
+                    </div>
+                    <button class="btn-ghost edit-btn" type="button"><i class="fa-solid fa-pen"></i> 編輯</button>
+                </div>
+
+                <div class="favorites-list" id="favorites-list"></div>
+                <div class="action-row center-align" style="margin-top:24px;">
+                    <button class="btn-ghost" style="color:var(--primary-color);" type="button"><i class="fa-solid fa-circle-plus"></i> 新增收藏車站</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-left">
+            <i class="fa-solid fa-circle-info"></i> 資料更新時間：<span id="update-time"></span>
+        </div>
+        <div class="footer-right">
+            Demo 用靜態資料
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="map-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="map-modal-close" type="button"><i class="fa-solid fa-xmark"></i></button>
+            <div id="modal-map-container"></div>
+        </div>
+    </div>
+
+    <script src="data/staticData.js"></script>
+    <script src="data/exitNameData.js"></script>
+    <script src="data/stationImageData.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

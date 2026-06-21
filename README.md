@@ -1,2 +1,1 @@
-# True-final
-最終佈署
+# final
