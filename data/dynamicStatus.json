@@ -1,0 +1,51 @@
+{
+  "systemAlerts": [
+    {
+      "id": 1,
+      "level": "info",
+      "message": "全線營運正常"
+    }
+  ],
+  "facilityStatus": [
+    {
+      "stationId": "BL12",
+      "facility": "電梯",
+      "location": "M3 出口",
+      "status": "維修中",
+      "estimatedCompletion": "2024/05/22 18:00"
+    },
+    {
+      "stationId": "R10",
+      "facility": "電梯",
+      "location": "M1 出口",
+      "status": "維修中",
+      "estimatedCompletion": "2024/05/23 12:00"
+    }
+  ],
+  "trainSchedules": {
+    "BL": {
+      "firstTrain": "06:00",
+      "lastTrain": "00:00"
+    },
+    "R": {
+      "firstTrain": "06:00",
+      "lastTrain": "00:00"
+    },
+    "G": {
+      "firstTrain": "06:00",
+      "lastTrain": "00:00"
+    },
+    "O": {
+      "firstTrain": "06:00",
+      "lastTrain": "00:00"
+    },
+    "BR": {
+      "firstTrain": "06:00",
+      "lastTrain": "00:00"
+    },
+    "Y": {
+      "firstTrain": "06:00",
+      "lastTrain": "00:00"
+    }
+  }
+}
